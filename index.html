@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎁 Kleines Geschenk</title>
+  <style>
+    :root { --bg:#0b0b12; --card:#141423; --text:#f3f3ff; --muted:#b9b9d6; }
+    * { box-sizing: border-box; }
+    body{
+      margin:0; min-height:100vh;
+      display:grid; place-items:center;
+      background: radial-gradient(1200px 600px at 50% 20%, #1b1b35 0%, var(--bg) 55%);
+      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      text-align:center;
+      padding:24px;
+    }
+    .card{
+      width:min(520px, 100%);
+      background: rgba(20,20,35,.72);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      padding: 26px 22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      backdrop-filter: blur(10px);
+    }
+    h1{ margin:0 0 10px; font-size:1.15rem; font-weight:650; letter-spacing:.2px; }
+    p{ margin:10px 0; color:var(--muted); line-height:1.45; }
+    .gift{
+      font-size: 92px;
+      display:inline-grid;
+      place-items:center;
+      width: 140px; height: 140px;
+      margin: 14px auto 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .gift:hover{ transform: scale(1.04); background: rgba(255,255,255,.06); }
+    .hint{ font-size:.95rem; margin-top:8px; }
+    .reveal{ display:none; margin-top: 16px; }
+    .badge{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      font-size: .92rem;
+      margin-bottom: 10px;
+    }
+    .big{
+      color: var(--text);
+      font-size: 1.35rem;
+      margin: 8px 0 10px;
+      font-weight: 750;
+    }
+    .fine{
+      color: var(--muted);
+      font-size: 1rem;
+      margin: 0;
+    }
+    .btnrow{ margin-top: 16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    button{
+      appearance:none; border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 650;
+      transition: transform .12s ease, background .12s ease;
+    }
+    button:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+    .tiny{ margin-top:14px; font-size:.88rem; color: rgba(185,185,214,.85); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Ich konnte das nicht einpacken… also hab ich’s anders gelöst.</h1>
+    <p class="hint">Tippe auf das Geschenk 👇</p>
+
+    <div id="gift" class="gift" aria-label="Geschenk öffnen" title="Klick mich">🎁</div>
+
+    <div id="reveal" class="reveal">
+      <div class="badge">Gutschein</div>
+      <div class="big">🎬 Kinoabeeend im Kino deiner Wahl.</div>
+      <p class="fine">Film: Auf was auch immer du Lust hast!<br>
+	  Mit im Gutschein enthalten: Organisation, Verpflegung und Fahrer</p>
+
+      <div class="btnrow">
+        <button id="confettiBtn" type="button">Nochmal 🎉</button>
+        <button id="copyBtn" type="button">Text kopieren</button>
+      </div>
+
+      <div class="tiny">Frohe Weihnachten!!!🎄</div>
+    </div>
+  </div>
+
+  <script>
+    const gift = document.getElementById("gift");
+    const reveal = document.getElementById("reveal");
+    const confettiBtn = document.getElementById("confettiBtn");
+    const copyBtn = document.getElementById("copyBtn");
+
+    function pop(){
+      // Mini-"Konfetti" ohne Bibliotheken: Emojis kurz durchwechseln
+      const emojis = ["🎉","✨","🎊","💥","⭐️"];
+      let i = 0;
+      const t = setInterval(() => {
+        gift.textContent = emojis[i % emojis.length];
+        i++;
+        if(i > 10){
+          clearInterval(t);
+          gift.textContent = "🎁";
+        }
+      }, 70);
+    }
+
+    gift.addEventListener("click", () => {
+      gift.style.display = "none";
+      reveal.style.display = "block";
+      pop();
+    });
+
+    confettiBtn.addEventListener("click", pop);
+
+    copyBtn.addEventListener("click", async () => {
+      const text = "🎬 Kinoabeeend im Kino deiner Wahl. Film: Auf was auch immer du lust hast!😄";
+      try{
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Kopiert ✅";
+        setTimeout(()=> copyBtn.textContent = "Text kopieren", 1400);
+      }catch(e){
+        // Fallback: wenn Clipboard blockiert ist
+        prompt("Kopier’s kurz manuell:", text);
+      }
+    });
+  </script>
+</body>
+</html>
